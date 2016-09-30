@@ -28,6 +28,10 @@
         "caption": "SublimeREPL: Python - virtualenv"
     },
     {
+        "command": "python_virtualenv_pdb",
+        "caption": "SublimeREPL: Python - virtualenv PDB current file"
+    },
+    {
         "caption": "SublimeREPL: Python - IPython",
         "command": "run_existing_window_command", "args":
         {

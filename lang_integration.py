@@ -121,6 +121,41 @@ class PythonVirtualenvRepl(sublime_plugin.WindowCommand):
         nice_choices = [[path.split(os.path.sep)[-2], path] for path in choices]
         self.window.show_quick_panel(nice_choices, partial(self.run_virtualenv, nice_choices))
 
+class PyEnvPdb(sublime_plugin.WindowCommand):
+    """
+    实现在project中设置python_interpreter使用PDB调试。
+    """
+    def _get_project(self):
+        """Get project configuration"""
+        return sublime.active_window().project_data()
+
+
+    def run_virtualenv(self):
+        project = self._get_project()
+
+        if project.get('settings',False) is not False:
+            python_executable = project['settings']['python_interpreter']
+
+        file_name = self.window.active_view().file_name()
+        # sublime.error_message(repr(file_name))
+        self.window.run_command("repl_open",
+            {
+                "encoding":"utf8",
+                "type": "subprocess",
+                "autocomplete_server": True,
+                "extend_env": {
+                    "PYTHONIOENCODING": "utf-8"
+                },
+                "cmd": [python_executable, "-i", "-u", "-m", "pdb", file_name],
+                "cwd": "$file_path",
+                "encoding": "utf8",
+                "syntax": "Packages/Python/Python.tmLanguage",
+                "external_id": "python"
+             })
+
+    def run(self):
+        # choices = self._scan()
+        self.run_virtualenv()
 
 VENV_SCAN_CODE = """
 import os
